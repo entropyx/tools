@@ -22,7 +22,7 @@ func TestTools(t *testing.T) {
 			[]string{"iphone", "iphone-case", "power bank"},
 		}
 
-		first := data[0]
+		// first := data[0]
 
 		Convey("If I remove [iphone] of [iphone iphone-case]", func() {
 			re := removeElement(data[0][0], data[5])
@@ -40,4 +40,13 @@ func TestTools(t *testing.T) {
 		})
 
 	})
+
+  Convey("Given two different slices", t, func() {
+    slice1 := []string{"1", "2", "3"}
+    slice2 := []string{"1", "2", "3", "4"}
+    Convey("It should return the difference between the two", func() {
+      result := []string{"4"}
+      So(Difference(slice1, slice2), ShouldResemble, result)
+    })
+  })
 }
