@@ -20,6 +20,7 @@ func TestTools(t *testing.T) {
 			[]string{"iphone", "iphone-case", "beats", "notebook", "pen", "desk", "laptop", "power bank"},
 			[]string{"iphone", "iphone-case", "power bank"},
 			[]string{"iphone", "iphone-case", "power bank"},
+			[]string{"iphone", "pencil", "beatss", "power bank"},
 		}
 
 		// first := data[0]
@@ -28,6 +29,20 @@ func TestTools(t *testing.T) {
 			re := RemoveElement(data[0][0], data[5])
 			Convey("The result array is [iphone-case]", func() {
 				So(re[0], ShouldEqual, "iphone-case")
+			})
+		})
+
+		Convey("If I remove the 0 index of data", func() {
+			re := RemoveArray(1, data)
+			Convey("The new 0 array should be [pencil]", func() {
+				So(re[1], ShouldResemble, []string{"motorolla"})
+			})
+		})
+
+		Convey("For validate that pencil is subset of [pencil beats]", func() {
+			ss := Subset(data[4], data[10])
+			Convey("The output should be true", func() {
+				So(ss, ShouldEqual, true)
 			})
 		})
 
@@ -50,7 +65,7 @@ func TestTools(t *testing.T) {
 		})
 	})
 
-	Convey("xxxxxxxxxxxxxxxxxxxxxxxxxx", t, func() {
+	Convey("Given the datasets", t, func() {
 		data := [][]string{
 			[]string{"id", "type", "value"},
 			[]string{"111", "A", "2"},
@@ -58,16 +73,15 @@ func TestTools(t *testing.T) {
 			[]string{"111", "A", "1"},
 			[]string{"222", "C", "2"},
 			[]string{"222", "B", "1"},
-			[]string{"111", "C", "3"},
+			[]string{"222", "C", "3"},
 		}
 
 		x := []string{"id", "type"}
 		y := "value"
 
-		Convey("yyyyyyyyyyyyyyyyyyyyyyyyyyyy", func() {
+		Convey("If I group by id and type, the value of the first array is [111, A, 3]", func() {
 			result := Aggregate(x, y, data)
-			So(result[1], ShouldEqual, 1)
+			So(result[1], ShouldResemble, []string{"111", "A", "3"})
 		})
 	})
-
 }
