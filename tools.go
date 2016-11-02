@@ -29,8 +29,7 @@ func Unique(x []string) []string {
 	encountered := map[string]bool{}
 	result := []string{}
 	for v := range x {
-		if encountered[x[v]] == true {
-		} else {
+		if encountered[x[v]] != true {
 			encountered[x[v]] = true
 			result = append(result, x[v])
 		}
@@ -127,10 +126,68 @@ L:
 		out = append(out, datasets[i])
 		i = i + 1
 	}
-	fmt.Println(out)
 	return out
 }
 
-func Pivot(datasets [][]string) [][]string {
-
+func Pivot(colpivotnames []string, colvaluename string, datasets [][]string) [][]string {
+	var pivot [][]string
+	var index1 int
+	var index2 int
+	var index3 []int
+	var aux []string
+	var s bool
+	var ss bool
+	var acum []int
+	pivot = append(pivot, datasets[0][:len(colpivotnames)])
+	for i := 0; i < len(datasets[0]); i++ {
+		if colvaluename == datasets[0][i] {
+			index1 = i
+		} else if "value" == datasets[0][i] {
+			index2 = i
+		}
+	}
+	for _, col := range colpivotnames {
+		for i := 0; i < len(colpivotnames); i++ {
+			if col == datasets[0][i] {
+				index3 = append(index3, i)
+			}
+		}
+	}
+	for i := 1; i < len(datasets); i++ {
+		aux = append(aux, datasets[i][index1])
+	}
+	u := Unique(aux)
+	pivot[0] = append(pivot[0], u...)
+	i2 := 0
+	for i := 1; i < len(datasets); i++ {
+		s = false
+		for _, r := range acum {
+			if i == r {
+				s = true
+				break
+			}
+		}
+		if !s {
+			i2 = i2 + 1
+			var row []string
+			for _, j1 := range index3 {
+				row = append(row, datasets[i][j1])
+			}
+			pivot = append(pivot, row)
+			for _, j3 := range u {
+				for k := 1; k < len(datasets); k++ {
+					ss = Subset(append(row, j3), datasets[k])
+					if ss {
+						pivot[i2] = append(pivot[i2], datasets[k][index2])
+						acum = append(acum, k)
+						break
+					}
+				}
+				if ss != true {
+					pivot[i2] = append(pivot[i2], "0")
+				}
+			}
+		}
+	}
+	return pivot
 }
