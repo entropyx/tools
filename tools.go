@@ -2,6 +2,7 @@ package tools
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -190,4 +191,19 @@ func Pivot(colpivotnames []string, colvaluename string, datasets [][]string) [][
 		}
 	}
 	return pivot
+}
+
+// Function Dist compute distance between two points.
+func Dist(point1, point2 []float64) float64 {
+	var dist float64
+	if len(point1) != len(point2) {
+		fmt.Println("Vectors of different length!")
+	} else {
+		a := 0.00
+		for i := 0; i < len(point1); i++ {
+			a = a + math.Pow(point1[i]-point2[i], 2)
+		}
+		dist = math.Sqrt(a)
+	}
+	return dist
 }

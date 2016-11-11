@@ -93,4 +93,16 @@ func TestTools(t *testing.T) {
 		})
 
 	})
+
+	Convey("Given two points", t, func() {
+
+		x := []float64{1, 0, 0, 3, 4, 42.1, 3}
+		y := []float64{1, 2, 3.4, 0, 0, 8.2, 0}
+
+		Convey("The distance between x and y is ", func() {
+			distance := Dist(x, y)
+			So(distance, ShouldResemble, 34.62325807892724)
+		})
+
+	})
 }
