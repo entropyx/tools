@@ -210,7 +210,7 @@ func Dist(point1, point2 []float64) float64 {
 }
 
 
-func timeMinusDays(days int) (string) {
+func TimeMinusDays(days int) (string) {
   layout := "2006-01-02T15:04:05.000Z"
   t := time.Now().AddDate(0, 0, days)
   mongoTime := t.Format(layout)
