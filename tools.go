@@ -213,6 +213,15 @@ func Dist(point1, point2 []float64) float64 {
 func TimeMinusDays(days int) (string) {
   layout := "2006-01-02T15:04:05.000Z"
   t := time.Now().AddDate(0, 0, days)
+  fmt.Println(t)
   mongoTime := t.Format(layout)
   return mongoTime
+}
+
+func NanoSecondsToMongoTime(ns int64) (string) {
+  layout := "2006-01-02T15:04:05.000Z"
+  fmt.Println(ns)
+  t := fmt.Sprintf("%d", ns)
+  mongoString, _ := time.Parse(layout, t)
+  return mongoString.String()
 }
