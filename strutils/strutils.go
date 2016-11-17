@@ -1,6 +1,6 @@
 package strutils
 
-// GroupDigits groups a number each n digits from right to left. Use sep as the seperator for each group.
+// GroupDigits groups each n digits of a number from right to left. Use sep as the seperator for each group.
 func GroupDigits(str, sep string, n int) string {
 	var groupedString []byte
 	sepb := []byte(sep)
