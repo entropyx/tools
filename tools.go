@@ -1,11 +1,11 @@
 package tools
 
 import (
-  "time"
-  "fmt"
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Test if given one element is subset of an array.
@@ -249,6 +249,50 @@ func Pivot(colpivotnames []string, colvaluename string, datasets [][]string) [][
 	return pivot
 }
 
+// Pivot2 like Pivot but faster
+func Pivot2(colpivotname string, colvaluename string, datasets [][]string) (u2 []string, pivot [][]float64) {
+	var index1, index2, index3 int
+	var aux1, aux2 []string
+
+	for i := 0; i < len(datasets[0]); i++ {
+		if colvaluename == datasets[0][i] {
+			index1 = i
+		} else if "value" == datasets[0][i] {
+			index2 = i
+		} else if colpivotname == datasets[0][i] {
+			index3 = i
+		}
+	}
+
+	for i := 1; i < len(datasets); i++ {
+		aux1 = append(aux1, datasets[i][index3])
+		aux2 = append(aux2, datasets[i][index1])
+
+	}
+	u1 := Unique(aux1)
+	u2 = Unique(aux2)
+
+	for _, p1 := range u1 {
+		row := []float64{}
+		for _, p2 := range u2 {
+			find := false
+			for i := 1; i < len(datasets); i++ {
+				if p1 == datasets[i][index3] && p2 == datasets[i][index1] {
+					a, _ := strconv.ParseFloat(datasets[i][index2], 64)
+					row = append(row, []float64{a}...)
+					find = true
+					break
+				}
+			}
+			if !find {
+				row = append(row, []float64{0}...)
+			}
+		}
+		pivot = append(pivot, row)
+	}
+	return
+}
+
 // Function Dist compute distance between two points.
 func Dist(point1, point2 []float64) float64 {
 	var dist float64
@@ -264,19 +308,18 @@ func Dist(point1, point2 []float64) float64 {
 	return dist
 }
 
-
-func TimeMinusDays(days int) (string) {
-  layout := "2006-01-02T15:04:05.000Z"
-  t := time.Now().AddDate(0, 0, days)
-  fmt.Println(t)
-  mongoTime := t.Format(layout)
-  return mongoTime
+func TimeMinusDays(days int) string {
+	layout := "2006-01-02T15:04:05.000Z"
+	t := time.Now().AddDate(0, 0, days)
+	fmt.Println(t)
+	mongoTime := t.Format(layout)
+	return mongoTime
 }
 
-func NanoSecondsToMongoTime(ns int64) (string) {
-  layout := "2006-01-02T15:04:05.000Z"
-  fmt.Println(ns)
-  t := fmt.Sprintf("%d", ns)
-  mongoString, _ := time.Parse(layout, t)
-  return mongoString.String()
+func NanoSecondsToMongoTime(ns int64) string {
+	layout := "2006-01-02T15:04:05.000Z"
+	fmt.Println(ns)
+	t := fmt.Sprintf("%d", ns)
+	mongoString, _ := time.Parse(layout, t)
+	return mongoString.String()
 }
