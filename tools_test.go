@@ -84,6 +84,11 @@ func TestTools(t *testing.T) {
 			So(result[1], ShouldResemble, []string{"111", "M", "A", "3"})
 		})
 
+		Convey("With Agreggate2, the value of the first array is [111, A, 3]", func() {
+			result := Aggregate(x, y, data)
+			So(result[1], ShouldResemble, []string{"111", "M", "A", "3"})
+		})
+
 		Convey("If I pivot by id and day, the value of the first array is [111, M, 2, 1]", func() {
 			data2 := Aggregate(x, y, data)
 			x := []string{"id", "day"}

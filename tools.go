@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 )
 
 // Test if given one element is subset of an array.
@@ -127,6 +128,60 @@ L:
 		out = append(out, datasets[i])
 		i = i + 1
 	}
+	return out
+}
+
+type aux struct {
+	ids    []string
+	values []float64
+}
+
+func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string) [][]string {
+	var out [][]string
+	var index1 []int
+	var index2 int
+
+	l1 := len(datasets[0])
+	for _, col := range colgroupnames {
+		for i := 0; i < l1; i++ {
+			if col == datasets[0][i] {
+				index1 = append(index1, i)
+			}
+		}
+	}
+
+	for i := 0; i < l1; i++ {
+		if colvaluename == datasets[0][i] {
+			index2 = i
+			break
+		}
+	}
+
+	agg := new(aux)
+
+	for i := 1; i < len(datasets); i++ {
+		var row []string
+		for _, j1 := range index1 {
+			row = append(row, datasets[i][j1])
+		}
+		agg.ids = append(agg.ids, strings.Join(row, ","))
+		a, _ := strconv.ParseFloat(datasets[i][index2], 64)
+		agg.values = append(agg.values, a)
+	}
+
+	out = append(out, datasets[0])
+	uniqueids := Unique(agg.ids)
+
+	for _, i := range uniqueids {
+		total := 0.00
+		for j := 0; j < len(agg.ids); j++ {
+			if i == agg.ids[j] {
+				total = total + agg.values[j]
+			}
+		}
+		out = append(out, append(strings.Split(i, ","), fmt.Sprintf("%v", total)))
+	}
+
 	return out
 }
 
