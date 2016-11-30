@@ -137,7 +137,7 @@ type aux struct {
 	values []float64
 }
 
-func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string) [][]string {
+func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string, c chan [][]string) {
 	var out [][]string
 	var index1 []int
 	var index2 int
@@ -182,8 +182,7 @@ func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string
 		}
 		out = append(out, append(strings.Split(i, ","), fmt.Sprintf("%v", total)))
 	}
-
-	return out
+	c <- out
 }
 
 func Pivot(colpivotnames []string, colvaluename string, datasets [][]string) [][]string {
