@@ -68,37 +68,34 @@ func TestTools(t *testing.T) {
 
 	Convey("Given the datasets", t, func() {
 		data := [][]string{
-			[]string{"id", "day", "type", "value"},
-			[]string{"111", "M", "A", "2"},
-			[]string{"111", "M", "B", "1"},
-			[]string{"111", "M", "A", "1"},
-			[]string{"222", "T", "C", "2"},
-			[]string{"222", "W", "B", "1"},
-			[]string{"222", "T", "C", "3"},
+			[]string{"id", "type", "value"},
+			[]string{"111", "A", "2"},
+			[]string{"111", "B", "1"},
+			[]string{"111", "A", "1"},
+			[]string{"222", "C", "2"},
+			[]string{"222", "B", "1"},
+			[]string{"222", "C", "3"},
 		}
 
 		x := []string{"id", "day", "type"}
 		y := "value"
+		c := make(chan [][]string)
 
 		Convey("If I group by id and type, the value of the first array is [111, A, 3]", func() {
 			result := Aggregate(x, y, data)
-			So(result[1], ShouldResemble, []string{"111", "M", "A", "3"})
+			So(result[1], ShouldResemble, []string{"111", "A", "3"})
 		})
 
-		Convey("With Agreggate2, the value of the first array is [111, A, 3]", func() {
-			result := Aggregate2(x, y, data)
-			So(result[1], ShouldResemble, []string{"111", "M", "A", "3"})
+		Convey("With Agreggate2, the value of the first array is [id type value]", func() {
+			go Aggregate2(x, y, data, c)
+			result := <-c
+			So(result[0], ShouldResemble, []string{"id", "type", "value"})
 		})
 
-		Convey("If I pivot by id and day, the value of the first array is [111, M, 2, 1]", func() {
-			data2 := Aggregate(x, y, data)
-			result := Pivot([]string{"id", "day"}, "type", data2)
-			So(result[1], ShouldResemble, []string{"111", "M", "3", "1", "0"})
-		})
-
-		Convey("With Pivot2, the value of the first array is [0 1 5]", func() {
-			data2 := Aggregate2(x, y, data)
-			result2, result1 := Pivot2("id", "type", data2)
+		Convey("With Pivot, the value of the first array is [0 1 5]", func() {
+			go Aggregate2(x, y, data, c)
+			result := <-c
+			result2, result1 := Pivot("id", "type", result)
 			fmt.Println(result2)
 			So(result1[1], ShouldResemble, []float64{0, 1, 5})
 		})
