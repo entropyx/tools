@@ -4,9 +4,13 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"strings"
 	"time"
 )
+
+type aux struct {
+	ids    []string
+	values []float64
+}
 
 // Test if given one element is subset of an array.
 func Subset(first, second []string) bool {
@@ -32,7 +36,7 @@ func Unique(x []string) []string {
 	encountered := map[string]bool{}
 	result := []string{}
 	for v := range x {
-		if encountered[x[v]] != true {
+		if !encountered[x[v]] {
 			encountered[x[v]] = true
 			result = append(result, x[v])
 		}
@@ -132,9 +136,31 @@ L:
 	return out
 }
 
-type aux struct {
-	ids    []string
-	values []float64
+func Compact(x [][]string, index1 []int, index2 int) map[string]map[string]float64 {
+	encountered := make(map[string]map[string]bool)
+	result := make(map[string]map[string]float64)
+	for v := range x {
+		id1 := x[v][index1[0]]
+		id2 := x[v][index1[1]]
+		value := x[v][index2]
+		if result[id1] == nil {
+			result[id1] = map[string]float64{}
+		}
+
+		if encountered[id1] == nil {
+			encountered[id1] = map[string]bool{}
+		}
+
+		if encountered[id1][id2] == false {
+			encountered[id1][id2] = true
+			a, _ := strconv.ParseFloat(value, 64)
+			result[id1][id2] = a
+		} else {
+			a, _ := strconv.ParseFloat(value, 64)
+			result[id1][id2] = result[id1][id2] + a
+		}
+	}
+	return result
 }
 
 func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string, c chan [][]string) {
@@ -157,99 +183,18 @@ func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string
 			break
 		}
 	}
-
-	agg := new(aux)
-
-	for i := 1; i < len(datasets); i++ {
-		var row []string
-		for _, j1 := range index1 {
-			row = append(row, datasets[i][j1])
-		}
-		agg.ids = append(agg.ids, strings.Join(row, ","))
-		a, _ := strconv.ParseFloat(datasets[i][index2], 64)
-		agg.values = append(agg.values, a)
-	}
-
 	out = append(out, datasets[0])
-	uniqueids := Unique(agg.ids)
+	y := Compact(datasets[1:], index1, index2)
 
-	for _, i := range uniqueids {
-		total := 0.00
-		for j := 0; j < len(agg.ids); j++ {
-			if i == agg.ids[j] {
-				total = total + agg.values[j]
-			}
+	for key1, map2 := range y {
+		for key2, value := range map2 {
+			out = append(out, append([]string{key1, key2, fmt.Sprintf("%v", value)}))
 		}
-		out = append(out, append(strings.Split(i, ","), fmt.Sprintf("%v", total)))
 	}
 	c <- out
 }
 
-func Pivot(colpivotnames []string, colvaluename string, datasets [][]string) [][]string {
-	var pivot [][]string
-	var index1 int
-	var index2 int
-	var index3 []int
-	var aux []string
-	var s bool
-	var ss bool
-	var acum []int
-	pivot = append(pivot, datasets[0][:len(colpivotnames)])
-	for i := 0; i < len(datasets[0]); i++ {
-		if colvaluename == datasets[0][i] {
-			index1 = i
-		} else if "value" == datasets[0][i] {
-			index2 = i
-		}
-	}
-	for _, col := range colpivotnames {
-		for i := 0; i < len(colpivotnames); i++ {
-			if col == datasets[0][i] {
-				index3 = append(index3, i)
-			}
-		}
-	}
-	for i := 1; i < len(datasets); i++ {
-		aux = append(aux, datasets[i][index1])
-	}
-	u := Unique(aux)
-	pivot[0] = append(pivot[0], u...)
-	i2 := 0
-	for i := 1; i < len(datasets); i++ {
-		s = false
-		for _, r := range acum {
-			if i == r {
-				s = true
-				break
-			}
-		}
-		if !s {
-			i2 = i2 + 1
-			var row []string
-			for _, j1 := range index3 {
-				row = append(row, datasets[i][j1])
-			}
-			pivot = append(pivot, row)
-			for _, j3 := range u {
-				for k := 1; k < len(datasets); k++ {
-					ss = Subset(append(row, j3), datasets[k])
-					if ss {
-						pivot[i2] = append(pivot[i2], datasets[k][index2])
-						acum = append(acum, k)
-						break
-					}
-				}
-				if ss != true {
-					pivot[i2] = append(pivot[i2], "0")
-				}
-			}
-		}
-	}
-	return pivot
-}
-
-// Pivot2 like Pivot but faster
-func Pivot2(colpivotname string, colvaluename string, datasets [][]string) (u2 []string, pivot [][]float64) {
+func Pivot(colpivotname string, colvaluename string, datasets [][]string) (u2 []string, pivot [][]float64) {
 	var index1, index2, index3 int
 	var aux1, aux2 []string
 
@@ -266,26 +211,25 @@ func Pivot2(colpivotname string, colvaluename string, datasets [][]string) (u2 [
 	for i := 1; i < len(datasets); i++ {
 		aux1 = append(aux1, datasets[i][index3])
 		aux2 = append(aux2, datasets[i][index1])
-
 	}
 	u1 := Unique(aux1)
 	u2 = Unique(aux2)
+	result := make(map[string]map[string]float64)
 
-	for _, p1 := range u1 {
+	for i := 1; i < len(datasets); i++ {
+		id1 := datasets[i][index3]
+		id2 := datasets[i][index1]
+		value, _ := strconv.ParseFloat(datasets[i][index2], 64)
+		if result[id1] == nil {
+			result[id1] = map[string]float64{}
+		}
+		result[id1][id2] = value
+	}
+
+	for i := range u1 {
 		row := []float64{}
-		for _, p2 := range u2 {
-			find := false
-			for i := 1; i < len(datasets); i++ {
-				if p1 == datasets[i][index3] && p2 == datasets[i][index1] {
-					a, _ := strconv.ParseFloat(datasets[i][index2], 64)
-					row = append(row, []float64{a}...)
-					find = true
-					break
-				}
-			}
-			if !find {
-				row = append(row, []float64{0}...)
-			}
+		for j := range u2 {
+			row = append(row, []float64{result[u1[i]][u2[j]]}...)
 		}
 		pivot = append(pivot, row)
 	}
