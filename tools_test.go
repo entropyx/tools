@@ -92,19 +92,14 @@ func TestTools(t *testing.T) {
 		y := "value"
 		c := make(chan [][]string)
 
-		Convey("If I group by id and type, the value of the first array is [111, A, 3]", func() {
-			result := Aggregate(x, y, data)
-			So(result[1], ShouldResemble, []string{"111", "A", "3"})
-		})
-
 		Convey("With Agreggate2, the value of the first array is [id type value]", func() {
-			go Aggregate2(x, y, data, c)
+			go Aggregate(x, y, data, c)
 			result := <-c
 			So(result[0], ShouldResemble, []string{"id", "type", "value"})
 		})
 
 		Convey("With Pivot, the value of the first array is [0 1 5]", func() {
-			go Aggregate2(x, y, data, c)
+			go Aggregate(x, y, data, c)
 			result := <-c
 			result2, result1 := Pivot("id", "type", result)
 			fmt.Println(result2)

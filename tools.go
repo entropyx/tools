@@ -13,7 +13,7 @@ type aux struct {
 	values []float64
 }
 
-// Test if given one element is subset of an array.
+// Subset test if given one element is subset of an array.
 func Subset(first, second []string) bool {
 	set := make(map[string]int)
 	for _, value := range second {
@@ -32,7 +32,7 @@ func Subset(first, second []string) bool {
 	return true
 }
 
-// Remove duplicate elements of the given array.
+// Unique remove duplicate elements of the given array.
 func Unique(x []string) []string {
 	encountered := map[string]bool{}
 	result := []string{}
@@ -45,7 +45,7 @@ func Unique(x []string) []string {
 	return result
 }
 
-// Remove array elements given element that I want remove.
+// RemoveElement remove array elements given element that I want remove.
 func RemoveElement(element string, array []string) []string {
 	var out []string
 	l1 := len(array)
@@ -57,7 +57,7 @@ func RemoveElement(element string, array []string) []string {
 	return out
 }
 
-// Remove the i'ths index of array of array of arrays.
+// RemoveArray remove the i'ths index of array of array of arrays.
 func RemoveArray(index int, arrays [][]string) [][]string {
 	arrays = append(arrays[:index], arrays[index+1:]...)
 	return arrays
@@ -88,55 +88,7 @@ func Difference(slice1 []string, slice2 []string) []string {
 	return difference
 }
 
-func Aggregate(colgroupnames []string, colvaluename string, datasets [][]string) [][]string {
-	var index1 []int
-	var index2 int
-	var ss bool
-	var out [][]string
-	l1 := len(datasets[0])
-	for _, col := range colgroupnames {
-		for i := 0; i < l1; i++ {
-			if col == datasets[0][i] {
-				index1 = append(index1, i)
-			}
-		}
-	}
-	out = append(out, datasets[0])
-	for i := 0; i < l1; i++ {
-		if colvaluename == datasets[0][i] {
-			index2 = i
-			break
-		}
-	}
-	i := 1
-L:
-	for i < len(datasets) {
-		var row []string
-		for _, j1 := range index1 {
-			row = append(row, datasets[i][j1])
-		}
-		for j := 0; j < len(out); j++ {
-			ss = Subset(row, out[j])
-			if ss {
-				a, err1 := strconv.ParseFloat(datasets[i][index2], 64)
-				b, err2 := strconv.ParseFloat(out[j][index2], 64)
-				if err1 != nil {
-					fmt.Println(err1)
-				} else if err2 != nil {
-					fmt.Println(err2)
-				}
-				c := a + b
-				out[j][index2] = fmt.Sprintf("%v", c)
-				i = i + 1
-				goto L
-			}
-		}
-		out = append(out, datasets[i])
-		i = i + 1
-	}
-	return out
-}
-
+// Compact function use in Aggregate
 func Compact(x [][]string, index1 []int, index2 int) map[string]map[string]float64 {
 	encountered := make(map[string]map[string]bool)
 	result := make(map[string]map[string]float64)
@@ -164,7 +116,8 @@ func Compact(x [][]string, index1 []int, index2 int) map[string]map[string]float
 	return result
 }
 
-func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string, c chan [][]string) {
+// Aggregate by sum
+func Aggregate(colgroupnames []string, colvaluename string, datasets [][]string, c chan [][]string) {
 	var out [][]string
 	var index1 []int
 	var index2 int
@@ -195,6 +148,7 @@ func Aggregate2(colgroupnames []string, colvaluename string, datasets [][]string
 	c <- out
 }
 
+// Pivot ...
 func Pivot(colpivotname string, colvaluename string, datasets [][]string) (u2 []string, pivot [][]float64) {
 	var index1, index2, index3 int
 	var aux1, aux2 []string
@@ -237,7 +191,7 @@ func Pivot(colpivotname string, colvaluename string, datasets [][]string) (u2 []
 	return
 }
 
-// Function Dist compute distance between two points.
+// Dist function compute distance between two points.
 func Dist(point1, point2 []float64) float64 {
 	var dist float64
 	if len(point1) != len(point2) {
@@ -252,6 +206,7 @@ func Dist(point1, point2 []float64) float64 {
 	return dist
 }
 
+// Apply any function to any datasets by column or by row.
 func Apply(X [][]float64, n int, f interface{}) (out []float64) {
 
 	fn := reflect.ValueOf(f)
@@ -285,6 +240,7 @@ func Apply(X [][]float64, n int, f interface{}) (out []float64) {
 	return out
 }
 
+// Order return the index order decreasing o increasing.
 func Order(x []float64, decreasing bool) (out []int) {
 	l := len(x)
 	k := 0
@@ -316,6 +272,7 @@ func Order(x []float64, decreasing bool) (out []int) {
 	return
 }
 
+// Sort return the same array order decreasing or decreasing.
 func Sort(x [][]float64, by []int) (out [][]float64) {
 	for _, i := range by {
 		out = append(out, x[i-1])
@@ -323,6 +280,7 @@ func Sort(x [][]float64, by []int) (out [][]float64) {
 	return
 }
 
+// TimeMinusDays return the difference of two dates.
 func TimeMinusDays(days int) string {
 	layout := "2006-01-02T15:04:05.000Z"
 	t := time.Now().AddDate(0, 0, days)
@@ -330,6 +288,7 @@ func TimeMinusDays(days int) string {
 	return mongoTime
 }
 
+// NanoSecondsToMongoTime return nanoseconds given any time.
 func NanoSecondsToMongoTime(ns int64) string {
 	layout := "2006-01-02T15:04:05.000Z"
 	t := fmt.Sprintf("%d", ns)
