@@ -3,6 +3,7 @@ package tools
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -251,17 +252,86 @@ func Dist(point1, point2 []float64) float64 {
 	return dist
 }
 
+func Apply(X [][]float64, n int, f interface{}) (out []float64) {
+
+	fn := reflect.ValueOf(f)
+	fnType := fn.Type()
+	if fnType.Kind() != reflect.Func || fnType.NumIn() != 1 || fnType.NumOut() != 1 {
+		panic("Expected a unary function returning a single value")
+	}
+
+	switch {
+	// Apply by row
+	case n == 1:
+		for i := 0; i < len(X); i++ {
+			out = append(out, fn.Call([]reflect.Value{reflect.ValueOf(X[i])})[0].Float())
+		}
+		// Apply by column
+	case n == 2:
+		var t [][]float64
+		for i := 0; i < len(X[0]); i++ {
+			var column []float64
+			for j := 0; j < len(X); j++ {
+				column = append(column, X[j][i])
+			}
+			t = append(t, column)
+		}
+		for i := 0; i < len(t); i++ {
+			out = append(out, fn.Call([]reflect.Value{reflect.ValueOf(t[i])})[0].Float())
+		}
+	case n > 2 || n < 1:
+		panic("n must be 1 or 2!.")
+	}
+	return out
+}
+
+func Order(x []float64, decreasing bool) (out []int) {
+	l := len(x)
+	k := 0
+	for i := 0; i < l; i++ {
+		out = append(out, i+1)
+	}
+	switch decreasing {
+	case true:
+		for k < l-1 {
+			if x[k] < x[k+1] {
+				x[k], x[k+1] = x[k+1], x[k]
+				out[k], out[k+1] = out[k+1], out[k]
+				k = 0
+			} else {
+				k++
+			}
+		}
+	case false:
+		for k < l-1 {
+			if x[k] > x[k+1] {
+				x[k], x[k+1] = x[k+1], x[k]
+				out[k], out[k+1] = out[k+1], out[k]
+				k = 0
+			} else {
+				k++
+			}
+		}
+	}
+	return
+}
+
+func Sort(x [][]float64, by []int) (out [][]float64) {
+	for _, i := range by {
+		out = append(out, x[i-1])
+	}
+	return
+}
+
 func TimeMinusDays(days int) string {
 	layout := "2006-01-02T15:04:05.000Z"
 	t := time.Now().AddDate(0, 0, days)
-	fmt.Println(t)
 	mongoTime := t.Format(layout)
 	return mongoTime
 }
 
 func NanoSecondsToMongoTime(ns int64) string {
 	layout := "2006-01-02T15:04:05.000Z"
-	fmt.Println(ns)
 	t := fmt.Sprintf("%d", ns)
 	mongoString, _ := time.Parse(layout, t)
 	return mongoString.String()

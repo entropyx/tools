@@ -7,6 +7,17 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+// mean function
+func mean(x []float64) float64 {
+	out := 0.00
+	n := len(x)
+	for i := 0; i < n; i++ {
+		out = out + x[i]
+	}
+	out = out / float64(n)
+	return out
+}
+
 func TestTools(t *testing.T) {
 
 	Convey("Given a list of transactions", t, func() {
@@ -100,6 +111,40 @@ func TestTools(t *testing.T) {
 			So(result1[1], ShouldResemble, []float64{0, 1, 5})
 		})
 
+	})
+
+	Convey("Given the following points", t, func() {
+		x := [][]float64{
+			[]float64{3, 2.5, 3.5, 1, 4.5},
+			[]float64{1, 2, 0, 1, 1.6},
+		}
+
+		Convey("The mean of each raw of [[3 2.5 3.5 1 4.5] [1 2 0 1 1.6]] is [2.9 1.12]", func() {
+			out := Apply(x, 1, mean)
+			So(out, ShouldResemble, []float64{2.9, 1.1199999999999999})
+		})
+
+		Convey("The mean of each column of [[3 2.5 3.5 1 4.5] [1 2 0 1 1.6]] is [2 2.25 1.75 3.05]", func() {
+			out := Apply(x, 2, mean)
+			So(out, ShouldResemble, []float64{2, 2.25, 1.75, 1, 3.05})
+		})
+
+		order := Order(x[0], true)
+		Convey("The decreasing order of [3 2.5 3.5 1 4.5] is [5 3 1 2 4]", func() {
+			So(order, ShouldResemble, []int{5, 3, 1, 2, 4})
+		})
+
+		Convey("The decreasing sort of [3 2.5 3.5 1 4.5] is [4.5 3.5 3 2.5 1]", func() {
+			y := [][]float64{
+				[]float64{1, 1, 1},
+				[]float64{2, 2, 2},
+				[]float64{3, 3, 3},
+				[]float64{4, 4, 4},
+				[]float64{5, 5, 5},
+			}
+			sort := Sort(y, order)
+			So(sort[0], ShouldResemble, []float64{5, 5, 5})
+		})
 	})
 
 	Convey("Given two points", t, func() {
