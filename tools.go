@@ -1,8 +1,10 @@
 package tools
 
 import (
+	"encoding/csv"
 	"fmt"
 	"math"
+	"os"
 	"reflect"
 	"strconv"
 	"time"
@@ -294,4 +296,36 @@ func NanoSecondsToMongoTime(ns int64) string {
 	t := fmt.Sprintf("%d", ns)
 	mongoString, _ := time.Parse(layout, t)
 	return mongoString.String()
+}
+
+// Save csv file
+func Save(data [][]string, path string) {
+	file, err := os.Create(path)
+	if err != nil {
+		panic("Csv creating file!")
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	err = writer.WriteAll(data)
+	if err != nil {
+		panic("Csv writing file!")
+	}
+	defer writer.Flush()
+}
+
+// Read csv file
+func Read(path string) ([][]string, error) {
+	csvfile, err := os.Open(path)
+	if err != nil {
+		panic("Csv opening file!")
+	}
+	defer csvfile.Close()
+
+	reader := csv.NewReader(csvfile)
+	fields, err := reader.ReadAll()
+	if err != nil {
+		panic("Csv reading file!")
+	}
+	return fields, nil
 }

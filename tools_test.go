@@ -153,4 +153,27 @@ func TestTools(t *testing.T) {
 		})
 
 	})
+
+	Convey("Given the following dataset", t, func() {
+
+		data := [][]string{
+			[]string{"id", "type", "value"},
+			[]string{"111", "A", "2"},
+			[]string{"111", "B", "1"},
+			[]string{"111", "A", "1"},
+			[]string{"222", "C", "2"},
+			[]string{"222", "B", "1"},
+			[]string{"222", "C", "3"},
+		}
+
+		Convey("Lets save in a csv file ... ", func() {
+			Save(data, "/home/gibran/Work/Go/src/github.com/entropyx/tools/dataset/result.csv")
+		})
+
+		Convey("Lets read csv file ... ", func() {
+			data2, _ := Read("/home/gibran/Work/Go/src/github.com/entropyx/tools/dataset/result.csv")
+			fmt.Println(data2)
+		})
+
+	})
 }
