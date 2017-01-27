@@ -151,9 +151,9 @@ func Aggregate(colgroupnames []string, colvaluename string, datasets [][]string,
 }
 
 // Pivot ...
-func Pivot(colpivotname string, colvaluename string, datasets [][]string) (u2 []string, pivot [][]float64) {
+func Pivot(colpivotname string, colvaluename string, datasets [][]string) (pivot [][]string) {
 	var index1, index2, index3 int
-	var aux1, aux2 []string
+	var aux1, aux2, u2 []string
 
 	for i := 0; i < len(datasets[0]); i++ {
 		if colvaluename == datasets[0][i] {
@@ -171,22 +171,26 @@ func Pivot(colpivotname string, colvaluename string, datasets [][]string) (u2 []
 	}
 	u1 := Unique(aux1)
 	u2 = Unique(aux2)
-	result := make(map[string]map[string]float64)
+	result := make(map[string]map[string]string)
 
 	for i := 1; i < len(datasets); i++ {
 		id1 := datasets[i][index3]
 		id2 := datasets[i][index1]
-		value, _ := strconv.ParseFloat(datasets[i][index2], 64)
+		value := datasets[i][index2]
 		if result[id1] == nil {
-			result[id1] = map[string]float64{}
+			result[id1] = map[string]string{}
 		}
 		result[id1][id2] = value
 	}
 
+	pivot = append(pivot, u2)
 	for i := range u1 {
-		row := []float64{}
+		row := []string{}
 		for j := range u2 {
-			row = append(row, []float64{result[u1[i]][u2[j]]}...)
+			if result[u1[i]][u2[j]] == "" {
+				result[u1[i]][u2[j]] = "0"
+			}
+			row = append(row, []string{result[u1[i]][u2[j]]}...)
 		}
 		pivot = append(pivot, row)
 	}

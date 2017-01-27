@@ -101,9 +101,8 @@ func TestTools(t *testing.T) {
 		Convey("With Pivot, the value of the first array is [0 1 5]", func() {
 			go Aggregate(x, y, data, c)
 			result := <-c
-			result2, result1 := Pivot("id", "type", result)
-			fmt.Println(result2)
-			So(result1[1], ShouldResemble, []float64{0, 1, 5})
+			result2 := Pivot("id", "type", result)
+			So(result2[2], ShouldResemble, []string{"0", "1", "5"})
 		})
 
 	})
