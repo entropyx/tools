@@ -35,6 +35,17 @@ func TestTools(t *testing.T) {
 			[]string{"iphone", "pencil", "beatss", "power bank"},
 		}
 
+		dates := []string{"2017-02-03", "2017-02-15"}
+
+		Convey("Max between two dates ...", func() {
+			max := MaxDate(dates)
+			So(max, ShouldEqual, "2017-02-15")
+		})
+
+		Convey("Difference between two dates ...", func() {
+			diff := DiffDate(dates[1], dates[0])
+			So(diff, ShouldEqual, 12)
+		})
 		// first := data[0]
 
 		Convey("If I remove [iphone] of [iphone iphone-case]", func() {

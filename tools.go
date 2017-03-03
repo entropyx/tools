@@ -333,3 +333,24 @@ func Read(path string) ([][]string, error) {
 	}
 	return fields, nil
 }
+
+func DiffDate(date1, date2 string) int {
+	layout := "2006-01-02"
+	t1, _ := time.Parse(layout, date1)
+	t2, _ := time.Parse(layout, date2)
+	nanosec := t1.Sub(t2)
+	days := int(math.Floor(nanosec.Hours() / 24))
+	return days
+}
+
+func MaxDate(date []string) string {
+	layout := "2006-01-02"
+	max, _ := time.Parse(layout, date[0])
+	for i := 1; i < len(date); i++ {
+		x, _ := time.Parse(layout, date[i])
+		if max.Before(x) {
+			max, _ = time.Parse(layout, date[i])
+		}
+	}
+	return max.Format(layout)
+}
