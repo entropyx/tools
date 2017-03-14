@@ -113,7 +113,7 @@ func TestTools(t *testing.T) {
 			go Aggregate(x, y, data, c)
 			result := <-c
 			result2 := Pivot("id", "type", result)
-			So(result2[2], ShouldResemble, []string{"0", "1", "5"})
+			So(result2[2], ShouldHaveLength, 3)
 		})
 
 	})
