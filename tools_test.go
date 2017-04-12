@@ -177,11 +177,11 @@ func TestTools(t *testing.T) {
 		}
 
 		Convey("Lets save in a csv file ... ", func() {
-			Save(data, "/home/gibran/Work/Go/src/github.com/entropyx/tools/dataset/result.csv")
+			Save(data, "result.csv")
 		})
 
 		Convey("Lets read csv file ... ", func() {
-			data2, _ := Read("/home/gibran/Work/Go/src/github.com/entropyx/tools/dataset/result.csv")
+			data2, _ := Read("result.csv")
 			fmt.Println(data2)
 		})
 
