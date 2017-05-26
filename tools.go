@@ -354,3 +354,13 @@ func MaxDate(date []string) string {
 	}
 	return max.Format(layout)
 }
+
+func Median(x []float64) (median float64) {
+	n := len(x)
+	if (n % 2) == 0 {
+		median = (x[(n/2)-1] + x[(n/2)]) / 2
+	} else {
+		median = x[((n+1)/2)-1]
+	}
+	return
+}
