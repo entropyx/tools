@@ -103,7 +103,7 @@ func TestTools(t *testing.T) {
 		y := "value"
 		c := make(chan [][]string)
 
-		Convey("With Agreggate2, the value of the first array is [id type value]", func() {
+		Convey("With Agreggate, the value of the first array is [id type value]", func() {
 			go Aggregate(x, y, data, c)
 			result := <-c
 			So(result[0], ShouldResemble, []string{"id", "type", "value"})
@@ -113,7 +113,7 @@ func TestTools(t *testing.T) {
 			go Aggregate(x, y, data, c)
 			result := <-c
 			result2 := Pivot("id", "type", result)
-			So(result2[2], ShouldResemble, []string{"0", "1", "5"})
+			So(result2[2], ShouldHaveLength, 3)
 		})
 
 	})
@@ -186,4 +186,13 @@ func TestTools(t *testing.T) {
 		})
 
 	})
+
+	Convey("Given the following array ... ", t, func() {
+		x := []float64{2, 3, 4, 4, 4, 4, 1, 1, 1, 1, 1.5, 1.5, 1.5, 2, 2, 3, 4, 4, 4, 4}
+		Convey("The median of x is 1.75 ", func() {
+			median := Median(x)
+			So(median, ShouldEqual, 2.5)
+		})
+	})
+
 }
