@@ -188,10 +188,10 @@ func TestTools(t *testing.T) {
 	})
 
 	Convey("Given the following array ... ", t, func() {
-		x := []float64{1, 1, 1, 1, 1.5, 1.5, 1.5, 2, 2, 3, 4, 4, 4, 4}
+		x := []float64{2, 3, 4, 4, 4, 4, 1, 1, 1, 1, 1.5, 1.5, 1.5, 2, 2, 3, 4, 4, 4, 4}
 		Convey("The median of x is 1.75 ", func() {
 			median := Median(x)
-			So(median, ShouldEqual, 1.75)
+			So(median, ShouldEqual, 2.5)
 		})
 	})
 

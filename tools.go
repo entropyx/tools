@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -356,6 +357,7 @@ func MaxDate(date []string) string {
 }
 
 func Median(x []float64) (median float64) {
+	sort.Sort(sort.Float64Slice(x))
 	n := len(x)
 	if (n % 2) == 0 {
 		median = (x[(n/2)-1] + x[(n/2)]) / 2
