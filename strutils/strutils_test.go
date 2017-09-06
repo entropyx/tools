@@ -42,10 +42,10 @@ func TestStringUtils(t *testing.T) {
 
 func TestUnderScore(t *testing.T) {
 	Convey("Underscore", t, func() {
-		So("i_love_golang_and_json_so_much", ShouldEqual, UnderScore("ILoveGolangAndJSONSoMuch"))
-		So("i_love_json", ShouldEqual, UnderScore("ILoveJSON"))
-		So("json", ShouldEqual, UnderScore("json"))
-		So("json", ShouldEqual, UnderScore("JSON"))
-		So("привет_мир", ShouldEqual, UnderScore("ПриветМир"))
+		So("i_love_golang_and_json_so_much", ShouldEqual, Underscore("ILoveGolangAndJSONSoMuch"))
+		So("i_love_json", ShouldEqual, Underscore("ILoveJSON"))
+		So("json", ShouldEqual, Underscore("json"))
+		So("json", ShouldEqual, Underscore("JSON"))
+		So("привет_мир", ShouldEqual, Underscore("ПриветМир"))
 	})
 }

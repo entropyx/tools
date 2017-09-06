@@ -49,7 +49,7 @@ func (b *buffer) indent() {
 	}
 }
 
-func UnderScore(s string) string {
+func Underscore(s string) string {
 	b := buffer{
 		r: make([]byte, 0, len(s)),
 	}
