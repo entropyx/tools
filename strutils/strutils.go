@@ -5,6 +5,14 @@ import (
 	"unicode/utf8"
 )
 
+// Copy makes a copy of a string
+func Copy(str string) string {
+	b := str
+	b2 := make([]byte, len(b))
+	copy(b2, b)
+	return string(b2)
+}
+
 // GroupDigits groups each n digits of a number from right to left. Use sep as the seperator for each group.
 func GroupDigits(str, sep string, n int) string {
 	var groupedString []byte

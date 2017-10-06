@@ -40,6 +40,20 @@ func TestStringUtils(t *testing.T) {
 	})
 }
 
+func TestCopy(t *testing.T) {
+	Convey("Given a string", t, func() {
+		str := "Hello!"
+
+		Convey("When it is copied", func() {
+			str2 := Copy(str)
+
+			Convey("The copy should be the same", func() {
+				So(str2, ShouldEqual, str)
+			})
+		})
+	})
+}
+
 func TestUnderScore(t *testing.T) {
 	Convey("Underscore", t, func() {
 		So("i_love_golang_and_json_so_much", ShouldEqual, Underscore("ILoveGolangAndJSONSoMuch"))
