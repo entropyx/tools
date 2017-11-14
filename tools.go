@@ -283,7 +283,7 @@ func Order(x []float64, decreasing bool) (out []int) {
 func Sort(x [][]float64, by []int) (out [][]float64) {
 	l := len(by)
 	for i := 0; i < l; i++ {
-		out = append(out, x[i-1])
+		out = append(out, x[by[i]-1])
 	}
 	return
 }
