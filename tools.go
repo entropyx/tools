@@ -281,8 +281,9 @@ func Order(x []float64, decreasing bool) (out []int) {
 
 // Sort return the same array order decreasing or decreasing.
 func Sort(x [][]float64, by []int) (out [][]float64) {
-	for _, i := range by {
-		out = append(out, x[i-1])
+	l := len(by)
+	for i := 0; i < l; i++ {
+		out = append(out, x[by[i]-1])
 	}
 	return
 }
