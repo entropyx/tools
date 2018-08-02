@@ -54,12 +54,12 @@ func TestCopy(t *testing.T) {
 	})
 }
 
-func TestUnderScore(t *testing.T) {
-	Convey("Underscore", t, func() {
-		So("i_love_golang_and_json_so_much", ShouldEqual, Underscore("ILoveGolangAndJSONSoMuch"))
-		So("i_love_json", ShouldEqual, Underscore("ILoveJSON"))
-		So("json", ShouldEqual, Underscore("json"))
-		So("json", ShouldEqual, Underscore("JSON"))
-		So("привет_мир", ShouldEqual, Underscore("ПриветМир"))
+func TestToSnakeCase(t *testing.T) {
+	Convey("ToSnakeCase", t, func() {
+		So("i_love_golang_and_json_so_much", ShouldEqual, ToSnakeCase("ILoveGolangAndJSONSoMuch"))
+		So("i_love_json", ShouldEqual, ToSnakeCase("ILoveJSON"))
+		So("json", ShouldEqual, ToSnakeCase("json"))
+		So("json", ShouldEqual, ToSnakeCase("JSON"))
+		So("привет_мир", ShouldEqual, ToSnakeCase("ПриветМир"))
 	})
 }

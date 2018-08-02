@@ -57,7 +57,7 @@ func (b *buffer) indent() {
 	}
 }
 
-func Underscore(s string) string {
+func ToSnakeCase(s string) string {
 	b := buffer{
 		r: make([]byte, 0, len(s)),
 	}
