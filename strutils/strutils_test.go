@@ -63,3 +63,9 @@ func TestToSnakeCase(t *testing.T) {
 		So("привет_мир", ShouldEqual, ToSnakeCase("ПриветМир"))
 	})
 }
+
+func TestDecodeUTF8(t *testing.T) {
+	Convey("DecodeUTF8", t, func() {
+		So("clásico!!!", ShouldEqual, DecodeUTF8("cl\303\241sico!!!"))
+	})
+}

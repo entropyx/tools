@@ -1,6 +1,7 @@
 package strutils
 
 import (
+	"fmt"
 	"unicode"
 	"unicode/utf8"
 )
@@ -90,4 +91,14 @@ func ToSnakeCase(s string) string {
 		b.write(m)
 	}
 	return string(b.r)
+}
+
+func DecodeUTF8(source string) string {
+	res := ""
+	for len(source) > 0 {
+		r, size := utf8.DecodeRuneInString(source)
+		res += fmt.Sprintf("%c", r)
+		source = source[size:]
+	}
+	return res
 }
