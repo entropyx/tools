@@ -1,6 +1,7 @@
 package strutils
 
 import (
+	"strconv"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -35,6 +36,23 @@ func TestStringUtils(t *testing.T) {
 
 			Convey("The result should be 100,00000", func() {
 				So(result, ShouldEqual, "100,00000")
+			})
+		})
+	})
+}
+
+func TestUrif(t *testing.T) {
+	Convey("Given a uri with parameters", t, func() {
+		uri := "/v1/users/:user_id/posts/:post_id/"
+
+		Convey("When the parameters are replaced with values", func() {
+			userID := 123
+			postID := "abcd1234"
+			newUri := Urif(uri, userID, postID)
+
+			Convey("The new uri should include the values", func() {
+				So(newUri, ShouldContainSubstring, strconv.Itoa(userID))
+				So(newUri, ShouldContainSubstring, postID)
 			})
 		})
 	})
