@@ -81,3 +81,11 @@ func TestToSnakeCase(t *testing.T) {
 		So("привет_мир", ShouldEqual, ToSnakeCase("ПриветМир"))
 	})
 }
+
+func TestPadLeft(t *testing.T) {
+	Convey("PadLeft", t, func() {
+		So("01", ShouldEqual, PadLeft("1", "0", 2))
+		So("0001", ShouldEqual, PadLeft("1", "0", 4))
+		So("12", ShouldEqual, PadLeft("12", "0", 2))
+	})
+}
