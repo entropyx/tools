@@ -56,6 +56,19 @@ func TestUrif(t *testing.T) {
 			})
 		})
 	})
+
+	Convey("Given a uri with an uint32 parameter", t, func() {
+		uri := "/v1/users/:user_id/"
+
+		Convey("When the parameters are replaced with values", func() {
+			userID := uint32(9194)
+			newUri := Urif(uri, userID)
+
+			Convey("The new uri should include the values", func() {
+				So(newUri, ShouldEqual, "/v1/users/9194/")
+			})
+		})
+	})
 }
 
 func TestCopy(t *testing.T) {
