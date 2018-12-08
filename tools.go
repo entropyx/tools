@@ -2,6 +2,7 @@ package tools
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"math"
 	"os"
@@ -366,4 +367,24 @@ func Median(x []float64) (median float64) {
 		median = x[((n+1)/2)-1]
 	}
 	return
+}
+
+func DecodeFromProto(pb interface{}, out interface{}) (interface{}, error) {
+	var err error
+	var data []byte
+
+	if data, err = json.Marshal(pb); err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(data, out); err != nil {
+		return nil, err
+	}
+
+	return out, nil
+}
+
+//
+func EncodeToProto(model interface{}, pb interface{}) (interface{}, error) {
+	return DecodeFromProto(model, pb)
 }

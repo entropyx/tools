@@ -100,3 +100,17 @@ func ToSnakeCase(s string) string {
 	}
 	return string(b.r)
 }
+
+func PadLeft(source string, char string, length int) string {
+
+	if len(source) < length {
+		complete := ""
+		for i := 0; i < length-len(source); i++ {
+			complete += char
+		}
+
+		source = complete + source
+	}
+
+	return source
+}
