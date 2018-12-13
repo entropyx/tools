@@ -2,6 +2,7 @@ package strutils
 
 import (
 	"fmt"
+	"regexp"
 	"unicode"
 	"unicode/utf8"
 )
@@ -12,6 +13,13 @@ func Copy(str string) string {
 	b2 := make([]byte, len(b))
 	copy(b2, b)
 	return string(b2)
+}
+
+//Urif formats the uri parameters with the format :resource_id
+func Urif(uri string, values ...interface{}) string {
+	r := regexp.MustCompile(`:([A-z]|[0-9]|_|)+`)
+	f := r.ReplaceAll([]byte(uri), []byte("%v"))
+	return fmt.Sprintf(string(f), values...)
 }
 
 // GroupDigits groups each n digits of a number from right to left. Use sep as the seperator for each group.
@@ -91,6 +99,20 @@ func ToSnakeCase(s string) string {
 		b.write(m)
 	}
 	return string(b.r)
+}
+
+func PadLeft(source string, char string, length int) string {
+
+	if len(source) < length {
+		complete := ""
+		for i := 0; i < length-len(source); i++ {
+			complete += char
+		}
+
+		source = complete + source
+	}
+
+	return source
 }
 
 func DecodeUTF8(source string) string {

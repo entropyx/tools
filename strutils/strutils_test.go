@@ -1,6 +1,7 @@
 package strutils
 
 import (
+	"strconv"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -40,6 +41,36 @@ func TestStringUtils(t *testing.T) {
 	})
 }
 
+func TestUrif(t *testing.T) {
+	Convey("Given a uri with parameters", t, func() {
+		uri := "/v1/users/:user_id/posts/:post_id/"
+
+		Convey("When the parameters are replaced with values", func() {
+			userID := 123
+			postID := "abcd1234"
+			newUri := Urif(uri, userID, postID)
+
+			Convey("The new uri should include the values", func() {
+				So(newUri, ShouldContainSubstring, strconv.Itoa(userID))
+				So(newUri, ShouldContainSubstring, postID)
+			})
+		})
+	})
+
+	Convey("Given a uri with an uint32 parameter", t, func() {
+		uri := "/v1/users/:user_id/"
+
+		Convey("When the parameters are replaced with values", func() {
+			userID := uint32(9194)
+			newUri := Urif(uri, userID)
+
+			Convey("The new uri should include the values", func() {
+				So(newUri, ShouldEqual, "/v1/users/9194/")
+			})
+		})
+	})
+}
+
 func TestCopy(t *testing.T) {
 	Convey("Given a string", t, func() {
 		str := "Hello!"
@@ -61,6 +92,14 @@ func TestToSnakeCase(t *testing.T) {
 		So("json", ShouldEqual, ToSnakeCase("json"))
 		So("json", ShouldEqual, ToSnakeCase("JSON"))
 		So("привет_мир", ShouldEqual, ToSnakeCase("ПриветМир"))
+	})
+}
+
+func TestPadLeft(t *testing.T) {
+	Convey("PadLeft", t, func() {
+		So("01", ShouldEqual, PadLeft("1", "0", 2))
+		So("0001", ShouldEqual, PadLeft("1", "0", 4))
+		So("12", ShouldEqual, PadLeft("12", "0", 2))
 	})
 }
 
