@@ -114,3 +114,13 @@ func PadLeft(source string, char string, length int) string {
 
 	return source
 }
+
+func DecodeUTF8(source string) string {
+	res := ""
+	for len(source) > 0 {
+		r, size := utf8.DecodeRuneInString(source)
+		res += fmt.Sprintf("%c", r)
+		source = source[size:]
+	}
+	return res
+}

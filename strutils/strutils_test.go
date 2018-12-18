@@ -102,3 +102,9 @@ func TestPadLeft(t *testing.T) {
 		So("12", ShouldEqual, PadLeft("12", "0", 2))
 	})
 }
+
+func TestDecodeUTF8(t *testing.T) {
+	Convey("DecodeUTF8", t, func() {
+		So("clásico!!!", ShouldEqual, DecodeUTF8("cl\303\241sico!!!"))
+	})
+}
