@@ -37,4 +37,30 @@ func TestDeepValue(t *testing.T) {
 			})
 		})
 	})
+
+	Convey("Given a nil value", t, func() {
+		var s *testStruct
+		v := reflect.ValueOf(s)
+		Convey("When the deep value is checked", func() {
+			dv := DeepValue(v)
+
+			Convey("The deep value should be a string", func() {
+				k := dv.Kind()
+				So(k, ShouldEqual, reflect.Invalid)
+			})
+		})
+	})
+
+	Convey("Given a string value", t, func() {
+		s := ""
+		v := reflect.ValueOf(s)
+		Convey("When the deep value is checked", func() {
+			dv := DeepValue(v)
+
+			Convey("The deep value should be a string", func() {
+				k := dv.Kind()
+				So(k, ShouldEqual, reflect.String)
+			})
+		})
+	})
 }

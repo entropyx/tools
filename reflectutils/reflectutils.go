@@ -1,6 +1,8 @@
 package reflectutils
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func DeepValue(v reflect.Value) reflect.Value {
 	k := v.Kind()
