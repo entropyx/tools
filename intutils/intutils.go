@@ -20,6 +20,10 @@ func RandInt(min int, max int) int {
 	return min + rand.Intn(max-min)
 }
 
+func RandUint(min uint, max uint) uint {
+	return uint(RandInt(int(min), int(max)))
+}
+
 func Test() {
 
 }
