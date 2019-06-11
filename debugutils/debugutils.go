@@ -30,7 +30,7 @@ func StackSimple() string {
 			continue
 		}
 		newLines = append(newLines, line, lines[i+1])
-		if len(newLines) == 7 {
+		if len(newLines) == 11 {
 			break
 		}
 	}
