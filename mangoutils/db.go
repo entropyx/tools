@@ -35,7 +35,7 @@ func init() {
 		Password: os.Getenv("MONGO_PASS"),
 		Source:   os.Getenv("MONGO_SOURCE"),
 	}
-	config.SetMonitor(mongotrace.NewMonitor(mongotrace.WithServiceName("mongo debora"), mongotrace.WithSampler(trace.AlwaysSample())))
+	config.SetMonitor(mongotrace.NewMonitor(mongotrace.WithServiceName(os.Getenv("MONGO_SERVICE")), mongotrace.WithSampler(trace.AlwaysSample())))
 	for {
 		connection, err = mango.Connect(config)
 		if err == nil {
