@@ -3,52 +3,18 @@ package tools
 import (
 	"context"
 	"errors"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/entropyx/mango"
 	"github.com/entropyx/mango/options"
-	mongotrace "github.com/entropyx/mongo-opencensus"
 	"github.com/entropyx/protos"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.opencensus.io/trace"
 )
 
 var client *mongo.Client
 var connection *mango.Connection
-
-func init() {
-	var err error
-	var count uint8
-	port, err := strconv.Atoi(os.Getenv("MONGO_PORT"))
-	if err != nil {
-		// panic(err)
-	}
-	config := &mango.Config{
-		Address:  os.Getenv("MONGO_HOST"),
-		Port:     uint(port),
-		Database: os.Getenv("MONGO_DB"),
-		Username: os.Getenv("MONGO_USER"),
-		Password: os.Getenv("MONGO_PASS"),
-		Source:   os.Getenv("MONGO_SOURCE"),
-	}
-	config.SetMonitor(mongotrace.NewMonitor(mongotrace.WithServiceName(os.Getenv("MONGO_SERVICE")), mongotrace.WithSampler(trace.AlwaysSample())))
-	for {
-		connection, err = mango.Connect(config)
-		if err == nil {
-			break
-		}
-		// fmt.Println(err)
-		count++
-		if count == 30 {
-			panic("unable to connect to mongo: " + err.Error())
-		}
-		time.Sleep(1 * time.Second)
-	}
-}
 
 func Register(c context.Context, models ...interface{}) {
 	connection.Register(c, models...)
@@ -58,7 +24,7 @@ func GetClientMongo() *mongo.Client {
 	return connection.GetClient()
 }
 
-func getConditions(selector *protos.Selector) (mango.M, error) {
+func GetConditions(selector *protos.Selector) (mango.M, error) {
 	predicates := selector.Predicates
 	conditions := mango.M{}
 	if len(predicates) == 0 {
@@ -89,7 +55,7 @@ func getConditions(selector *protos.Selector) (mango.M, error) {
 	return conditions, nil
 }
 
-func getPage(selector *protos.Selector) (*options.Find, error) {
+func GetPage(selector *protos.Selector) (*options.Find, error) {
 	paging := selector.Paging
 	if paging != nil {
 		page, err := strconv.ParseInt(paging.StartIndex, 10, 64)
