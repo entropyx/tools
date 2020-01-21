@@ -7,19 +7,17 @@ import (
 )
 
 func TestRand(t *testing.T) {
-	Convey("Given a", t, func() {
-		Convey("When", func() {
-			s1 := Rand(10)
-			s2 := Rand(10)
+	Convey("When two random strings are generated", t, func() {
+		s1 := Rand(10)
+		s2 := Rand(10)
 
-			Convey("udhfuda", func() {
-				So(s1, ShouldHaveLength, 10)
-				So(s2, ShouldHaveLength, 10)
-			})
+		Convey("They should have length 10", func() {
+			So(s1, ShouldHaveLength, 10)
+			So(s2, ShouldHaveLength, 10)
+		})
 
-			Convey("Both strings should not be equal", func() {
-				So(s1, ShouldNotEqual, s2)
-			})
+		Convey("They should not be the same", func() {
+			So(s1, ShouldNotEqual, s2)
 		})
 	})
 }
