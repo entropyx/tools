@@ -388,3 +388,51 @@ func DecodeFromProto(pb interface{}, out interface{}) (interface{}, error) {
 func EncodeToProto(model interface{}, pb interface{}) (interface{}, error) {
 	return DecodeFromProto(model, pb)
 }
+
+func IsValueEmpty(value interface{}) bool {
+	switch v := value.(type) {
+	case int:
+		return v == 0
+	case int8:
+		return v == 0
+	case int16:
+		return v == 0
+	case int32:
+		return v == 0
+	case int64:
+		return v == 0
+	case uint:
+		return v == 0
+	case uint16:
+		return v == 0
+	case uint32:
+		return v == 0
+	case uint64:
+		return v == 0
+	case float32:
+		return v == 0
+	case float64:
+		return v == 0
+	case string:
+		return v == ""
+	case byte:
+		return v == 0
+	case []string:
+		return v == nil || len(v) == 0
+	case []int:
+		return v == nil || len(v) == 0
+	case []int32:
+		return v == nil || len(v) == 0
+	case []int64:
+		return v == nil || len(v) == 0
+	case []float32:
+		return v == nil || len(v) == 0
+	case []float64:
+		return v == nil || len(v) == 0
+	case []uint32:
+		return v == nil || len(v) == 0
+	case []uint64:
+		return v == nil || len(v) == 0
+	}
+	return false
+}
